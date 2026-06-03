@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta property="og:title" content="中国队赛程提醒">
+<meta property="og:description" content="实时掌握中国国家队比赛动态，支持比赛提醒">
+<title>中国队赛程提醒</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>中国队赛程</h1>
+      <div class="header-subtitle">实时掌握国家队比赛动态</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-icon has-badge" onclick="scrollToReminded()" title="已提醒的比赛">
+        🔔<span class="badge" id="reminderBadge" style="display:none">0</span>
+      </button>
+      <button class="btn-icon" onclick="location.reload()" title="刷新">🔄</button>
+    </div>
+  </div>
+</div>
+
+<div class="next-match" id="nextMatchBanner"></div>
+
+<div class="filter-bar">
+  <div class="filter-tabs" id="filterTabs"></div>
+</div>
+
+<div class="sub-bar">
+  <span class="match-count" id="matchCount"></span>
+  <button class="btn-remind-all" id="btnRemindAll" onclick="remindAllVisible()"></button>
+</div>
+
+<div class="match-list" id="matchList"></div>
+
+<div class="footer">数据仅供参考，以官方公布为准</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="notifModal">
+  <div class="modal-sheet">
+    <h3>开启比赛提醒</h3>
+    <p>开启浏览器通知后，比赛开始前 1 小时我们会提醒你，不错过每一场精彩比赛。</p>
+    <button class="btn-primary" onclick="requestNotification()">开启通知</button>
+    <button class="btn-secondary" onclick="closeNotifModal()">暂不开启</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
