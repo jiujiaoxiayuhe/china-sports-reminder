@@ -49,3 +49,9 @@ Step 9: 如果豆包指出错误，修正 data.json 后重新运行步骤 4
 - 拒绝写入空数据
 - 验证不通过时保留现有数据
 - 自动备份当前数据到 git（可通过 git reflog 恢复）
+
+## 当前配置
+- 豆包 endpoint: YOUR_DOUBAO_ENDPOINT
+- 豆包模型: Doubao-1.5-pro-32k-250115
+- API Key: 已配置
+- DeepSeek API: 已配置 (余额 38.39 元)
