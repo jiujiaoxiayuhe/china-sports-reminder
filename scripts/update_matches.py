@@ -2,6 +2,12 @@
 import json, os, re, sys, urllib.request
 from datetime import date
 
+# SAFETY WARNING: update() REPLACES all matches in app.js!
+# Only run this if your input JSON contains the COMPLETE match list.
+# NEVER pass a partial list - it will delete all other matches!
+# To restore: git checkout c67aeea -- app.js
+
+
 ARK_KEY = os.environ.get("ARK_API_KEY", "YOUR_ARK_API_KEY")
 DS_KEY = os.environ.get("DEEPSEEK_API_KEY", "YOUR_DEEPSEEK_API_KEY")
 EP = os.environ.get("DOUBAO_ENDPOINT", "YOUR_DOUBAO_ENDPOINT")
@@ -77,6 +83,7 @@ def main():
     except Exception as e: print(f"Error: {e}"); return
     if not data: print("Empty, skip"); return
     print(f"Input: {len(data)} matches")
+    print("  [WARN] This will REPLACE all existing matches in app.js!")
     print("Phase 1: DeepSeek verifying...")
     v1, ok1 = verify("deepseek", data)
     if not ok1: print("  DS has concerns, continuing...")
