@@ -1,16 +1,27 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 import json, os, re, sys, urllib.request
 from datetime import date
 
+# ======================================================================
+# SECURITY: All credentials must be set as environment variables!
+# Do NOT hardcode keys in this file - repo is public.
+# ======================================================================
 # SAFETY WARNING: update() REPLACES all matches in app.js!
-# Only run this if your input JSON contains the COMPLETE match list.
-# NEVER pass a partial list - it will delete all other matches!
+# Only run if input JSON has the COMPLETE match list.
 # To restore: git checkout c67aeea -- app.js
+# ======================================================================
 
+ARK_KEY = os.environ.get("ARK_API_KEY")
+DS_KEY = os.environ.get("DEEPSEEK_API_KEY")
+EP = os.environ.get("DOUBAO_ENDPOINT")
 
-ARK_KEY = os.environ.get("ARK_API_KEY", "YOUR_ARK_API_KEY")
-DS_KEY = os.environ.get("DEEPSEEK_API_KEY", "YOUR_DEEPSEEK_API_KEY")
-EP = os.environ.get("DOUBAO_ENDPOINT", "YOUR_DOUBAO_ENDPOINT")
+if not ARK_KEY or not DS_KEY or not EP:
+    print("Error: Please set these environment variables before running:")
+    print("  $env:ARK_API_KEY='your-key'")
+    print("  $env:DEEPSEEK_API_KEY='your-key'")
+    print("  $env:DOUBAO_ENDPOINT='ep-xxxxx'")
+    sys.exit(1)
+
 DU_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions"
 DS_URL = "https://api.deepseek.com/v1/chat/completions"
 PROJ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -83,7 +94,7 @@ def main():
     except Exception as e: print(f"Error: {e}"); return
     if not data: print("Empty, skip"); return
     print(f"Input: {len(data)} matches")
-    print("  [WARN] This will REPLACE all existing matches in app.js!")
+    print("  [WARN] This REPLACES all existing matches in app.js!")
     print("Phase 1: DeepSeek verifying...")
     v1, ok1 = verify("deepseek", data)
     if not ok1: print("  DS has concerns, continuing...")

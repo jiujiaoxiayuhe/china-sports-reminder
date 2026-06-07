@@ -4,3 +4,7 @@ temp_key.pub
 surge-creds.txt
 package-lock.json
 .vercel
+
+# Environment variables with secrets
+.env
+.env.*
