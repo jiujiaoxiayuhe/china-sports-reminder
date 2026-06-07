@@ -23,9 +23,7 @@ const MATCHES = [
     "date": "2026-06-07",
     "time": "22:00",
     "venue": "法国土伦",
-    "isHome": false,
-    "score": "?",
-    "result": ""
+    "isHome": false
   },
   {
     "id": 30,
@@ -71,19 +69,69 @@ const MATCHES = [
     "isHome": true
   },
   {
-    "id": 22,
-    "sport": "basketball",
-    "sportName": "篮球",
-    "icon": "🏀",
-    "team": "中国U18男篮",
-    "opponent": "日本U18",
-    "competition": "U18亚洲杯预选赛",
-    "date": "2026-06-07",
-    "time": "19:00",
-    "venue": "待定",
-    "isHome": false,
-    "score": "?",
-    "result": "loss"
+    "id": 40,
+    "sport": "athletics",
+    "sportName": "田径",
+    "icon": "🏃",
+    "team": "中国田径队",
+    "opponent": "—",
+    "competition": "世界田径锦标赛",
+    "date": "2026-08-06",
+    "time": "—",
+    "venue": "日本东京",
+    "isHome": false
+  },
+  {
+    "id": 50,
+    "sport": "volleyball",
+    "sportName": "排球",
+    "icon": "🏐",
+    "team": "中国女排",
+    "opponent": "待定",
+    "competition": "世界女排锦标赛",
+    "date": "2026-08-22",
+    "time": "—",
+    "venue": "泰国",
+    "isHome": false
+  },
+  {
+    "id": 51,
+    "sport": "volleyball",
+    "sportName": "排球",
+    "icon": "🏐",
+    "team": "中国男排",
+    "opponent": "待定",
+    "competition": "世界男排锦标赛",
+    "date": "2026-08-26",
+    "time": "—",
+    "venue": "菲律宾",
+    "isHome": false
+  },
+  {
+    "id": 60,
+    "sport": "badminton",
+    "sportName": "羽毛球",
+    "icon": "🏸",
+    "team": "中国羽毛球队",
+    "opponent": "—",
+    "competition": "世界羽毛球锦标赛",
+    "date": "2026-08-10",
+    "time": "—",
+    "venue": "印度",
+    "isHome": false
+  },
+  {
+    "id": 99,
+    "sport": "football",
+    "sportName": "足球",
+    "icon": "⚽",
+    "team": "中国队",
+    "opponent": "—",
+    "competition": "2026亚运会",
+    "date": "2026-09-19",
+    "time": "—",
+    "venue": "日本名古屋",
+    "isHome": false
   }
 ]
 
