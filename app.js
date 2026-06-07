@@ -303,7 +303,7 @@ const MATCHES = [
     "venue": "日本名古屋",
     "isHome": false
   }
-]
+];
 
 const SPORTS = [
   { key: "all", name: "全部", icon: "" },

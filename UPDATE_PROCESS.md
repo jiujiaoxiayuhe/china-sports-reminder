@@ -1,40 +1,51 @@
-﻿# 中国国家队赛程提醒 - 每周更新流程
+# 每周赛程更新流程
 
-## 更新流程（每周执行）
+## 数据来源说明
 
-### 如果你有 豆包 API：
-```
-Phase 1: 豆包 → 查询所有当前比赛
-Phase 2: DeepSeek → 验证豆包数据
-Phase 3: 豆包 → 根据验证结果修正数据
-Phase 4: 更新 app.js → 部署到 GitHub Pages
-Phase 5: 截图 → 发给豆包验证
-Phase 6: 修改错误 → 再次部署
-```
+DeepSeek 的知识截止于 2025 年，无法直接查询 2026 年的比赛赛程。
+**必须通过其他渠道获取比赛数据后，再用本脚本验证和部署。**
 
-### 如果你没有 豆包 API（当前方案）：
-当前使用 DeepSeek API 完成查询+验证，流程如下：
+## 推荐的完整流程（手动）
 
 ```
-python scripts/update_matches.py
+Step 1: 在浏览器打开 https://jiujiaoxiayuhe.github.io/china-sports-reminder/ 截图
+Step 2: 发给豆包，要求查询最新比赛安排
+Step 3: 豆包返回的数据保存为 data.json
+Step 4: 运行 python scripts/update_matches.py data.json
+Step 5: 脚本自动用 DeepSeek 验证数据
+Step 6: 验证通过后自动更新 app.js 并推送到 GitHub
+Step 7: 等几分钟后刷新页面截图
+Step 8: 把截图发给豆包二次验证
+Step 9: 如果豆包指出错误，修正 data.json 后重新运行步骤 4
 ```
 
-该脚本会自动:
-1. 用 DeepSeek 查询当前赛程
-2. 交叉验证数据
-3. 更新 app.js
-4. 提交并推送到 GitHub
+## 豆包 API（未来可用）
 
-### GitHub Actions 自动更新
-已配置每周一北京时间 08:00 自动运行（需在 repo Settings → Secrets 中设置 DEEPSEEK_API_KEY）。
+火山引擎 Ark API key (`2595e280-...`) 已验证可用，但账户中尚未开通任何模型。
+如需自动化豆包查询，需在 火山引擎控制台 (console.volcengine.com)：
+1. 开通豆包模型（如 doubao-1-5-pro-32k）
+2. 创建推理接入点（Endpoint）
+3. 脚本已预留 `--doubao-input` 参数
 
-## 手动快速验证（有浏览器时）
-1. 打开 https://jiujiaoxiayuhe.github.io/china-sports-reminder/
-2. 截图发给豆包说："请检查这些比赛数据是否正确"
-3. 根据反馈手动修正 app.js
-4. 提交推送
+## 已确认的比赛（人工核对，不可修改）
 
-## 历史已确认的比赛（不可修改）
-- 足球: 6月9日 中国男足 vs 泰国（浙江金华）
-- 女排: 6月11日 vs 巴西, 6月13日 vs 土耳其（香港）
-- 男排: 6月16日 vs 斯洛文尼亚（临沂）, 6月18日 vs 意大利, 6月19日 vs 法国（菲律宾）
+### 足球
+- 6月9日 20:00 中国男足 vs 泰国（浙江金华）- 友谊赛 [已核实]
+
+### 女排
+- 6月3日 中国女排 vs 捷克 3-0（南京）
+- 6月7日 中国女排 vs 波兰 3-1（南京）
+- 6月11日 20:00 中国女排 vs 巴西（香港）
+- 6月13日 20:00 中国女排 vs 土耳其（香港）
+
+### 男排
+- 6月16日 19:00 中国男排 vs 斯洛文尼亚（临沂）
+- 6月18日 19:00 中国男排 vs 意大利（菲律宾）
+- 6月19日 16:00 中国男排 vs 法国（菲律宾）
+
+## 安全保护
+
+脚本内置多层安全保护：
+- 拒绝写入空数据
+- 验证不通过时保留现有数据
+- 自动备份当前数据到 git（可通过 git reflog 恢复）
