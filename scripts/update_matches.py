@@ -1,25 +1,12 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 import json, os, re, sys, urllib.request
 from datetime import date
-
-# ======================================================================
-# SECURITY: All credentials must be set as environment variables!
-# Do NOT hardcode keys in this file - repo is public.
-# ======================================================================
-# SAFETY WARNING: update() REPLACES all matches in app.js!
-# Only run if input JSON has the COMPLETE match list.
-# To restore: git checkout c67aeea -- app.js
-# ======================================================================
 
 ARK_KEY = os.environ.get("ARK_API_KEY")
 DS_KEY = os.environ.get("DEEPSEEK_API_KEY")
 EP = os.environ.get("DOUBAO_ENDPOINT")
-
 if not ARK_KEY or not DS_KEY or not EP:
-    print("Error: Please set these environment variables before running:")
-    print("  $env:ARK_API_KEY='your-key'")
-    print("  $env:DEEPSEEK_API_KEY='your-key'")
-    print("  $env:DOUBAO_ENDPOINT='ep-xxxxx'")
+    print("Error: Set ARK_API_KEY, DEEPSEEK_API_KEY, DOUBAO_ENDPOINT")
     sys.exit(1)
 
 DU_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions"
@@ -37,26 +24,48 @@ def ai(provider, system, user, mt=4000):
         try:
             d = json.dumps(payload).encode("utf-8")
             r = urllib.request.Request(url, data=d, headers=headers, method="POST")
-            with urllib.request.urlopen(r, timeout=60) as resp:
+            with urllib.request.urlopen(r, timeout=90) as resp:
                 return json.loads(resp.read().decode("utf-8"))["choices"][0]["message"]["content"]
         except Exception as e:
             print(f"  [{provider}] fail({a+1}): {e}")
     return ""
 
-def verify(provider, matches):
-    if not matches: return matches, True
+def verify_and_complete(provider, matches):
+    if not matches: return [], True
     data = json.dumps(matches, ensure_ascii=False, indent=2)
     name = "DeepSeek" if provider == "deepseek" else "Doubao"
-    s = "You are a Chinese sports data validator. Check match data for errors."
-    u = "Verify these Chinese national team matches. Output JSON with valid(bool) and issues(list):\n" + data
-    resp = ai(provider, s, u)
-    if not resp: return matches, True
+    system = (
+        "You are a Chinese sports data expert. Tasks:\n"
+        "1. Verify the provided match data (check dates, opponents, venues)\n"
+        "2. IDENTIFY any MISSING Chinese national team matches in the same period\n"
+        "3. Add any confirmed missing matches to the list\n\n"
+        "Sports: football, volleyball, basketball, table tennis, badminton, snooker, athletics, swimming\n"
+        "Only add matches you are confident exist. Mark uncertain with 'unconfirmed': true.\n"
+        "IMPORTANT: 2026 World Cup Asian Qualifiers Round 3 ended in 2025.\n\n"
+        "Return JSON: {\"matches\": [complete list with verified + newly added]}"
+    )
+    user = (
+        "Current Chinese national team matches:\n\n" + data + "\n\n"
+        "1. Verify each match\n"
+        "2. Add any missing matches for June-October 2026\n"
+        "3. Return the COMPLETE list\n\n"
+        "Each match needs: sport, team, opponent, date(YYYY-MM-DD), time(HH:MM), competition, venue, isHome"
+    )
+    resp = ai(provider, system, user)
+    if not resp:
+        print(f"  {name} no response, using original")
+        return matches, True
     try:
         r = json.loads(resp)
-        if r.get("valid") == False:
-            print(f"  {name} flagged: {r.get('issues', [])}")
-        return matches, r.get("valid", True)
-    except:
+        result = r.get("matches", [])
+        if result:
+            diff = len(result) - len(matches)
+            if diff > 0: print(f"  {name} added {diff} new match(es)")
+            elif diff < 0: print(f"  {name} removed {-diff} match(es)")
+            return result, True
+        return matches, True
+    except json.JSONDecodeError:
+        print(f"  {name} response not JSON, using original")
         return matches, True
 
 def load():
@@ -74,37 +83,37 @@ def update(new):
 def push():
     os.chdir(PROJ)
     os.system("git add -A")
-    os.system(f'git commit -m "weekly update: {date.today().isoformat()}"')
-    os.system("git push origin master")
-    print("  [OK] pushed")
+    os.system("git commit -m " + '"weekly update: ' + str(date.today().isoformat()) + '"')
+    import time
+    r = os.system("git -c http.version=HTTP/1.1 push origin master")
+    if r != 0:
+        print("  [*] Push failed, retrying in 5s...")
+        time.sleep(5)
+        r = os.system("git -c http.version=HTTP/1.1 push origin master")
+    if r == 0: print("  [OK] pushed")
+    else: print("  [!] Push failed after retry")
 
 def main():
     print("=== Weekly Update ===")
-    print(f"Date: {date.today().isoformat()}")
+    print("Date: " + date.today().isoformat())
     if len(sys.argv) < 2:
-        print("Usage: python update_matches.py data.json")
-        print()
-        print("data.json format:")
-        print('[{"sport": "football", "team": "China", "opponent": "Thailand",')
-        print('  "date": "2026-06-09", "time": "20:00",')
-        print('  "competition": "Friendly", "venue": "Jinhua", "isHome": true}]')
-        return
+        print("Usage: python update_matches.py data.json"); return
     try:
         with open(sys.argv[1], "r", encoding="utf-8") as f: data = json.load(f)
-    except Exception as e: print(f"Error: {e}"); return
+    except Exception as e: print("Error: " + str(e)); return
     if not data: print("Empty, skip"); return
-    print(f"Input: {len(data)} matches")
-    print("  [WARN] This REPLACES all existing matches in app.js!")
-    print("Phase 1: DeepSeek verifying...")
-    v1, ok1 = verify("deepseek", data)
-    if not ok1: print("  DS has concerns, continuing...")
-    print("Phase 2: Doubao verifying...")
-    v2, ok2 = verify("doubao", v1)
+    print("Input: " + str(len(data)) + " matches")
+    print("Phase 1: DeepSeek verify + complete...")
+    v1, ok1 = verify_and_complete("deepseek", data)
+    print("  After DS: " + str(len(v1)) + " matches")
+    print("Phase 2: Doubao verify...")
+    v2, ok2 = verify_and_complete("doubao", v1)
+    print("  After DB: " + str(len(v2)) + " matches")
     print("Phase 3: Updating app.js...")
     if update(v2):
         print("Phase 4: Pushing to GitHub...")
         push()
-    print(f"Done: https://jiujiaoxiayuhe.github.io/china-sports-reminder/")
+    print("Done: https://jiujiaoxiayuhe.github.io/china-sports-reminder/")
 
 if __name__ == "__main__":
     main()
