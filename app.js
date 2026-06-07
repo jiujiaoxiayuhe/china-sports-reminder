@@ -1,67 +1,70 @@
 const MATCHES = [
-  { id: 1, sport: "football", sportName: "足球", icon: "⚽", team: "中国男足", opponent: "日本", competition: "2026世界杯亚洲区预选赛 18强赛", date: "2026-06-08", time: "19:35", venue: "沈阳奥体中心", isHome: true },
-  { id: 2, sport: "football", sportName: "足球", icon: "⚽", team: "中国男足", opponent: "澳大利亚", competition: "2026世界杯亚洲区预选赛 18强赛", date: "2026-06-13", time: "20:00", venue: "悉尼安联体育场", isHome: false },
-  { id: 3, sport: "football", sportName: "足球", icon: "⚽", team: "中国女足", opponent: "韩国女足", competition: "2026女足亚洲杯小组赛", date: "2026-07-02", time: "16:00", venue: "成都凤凰山体育公园", isHome: true },
-  { id: 4, sport: "football", sportName: "足球", icon: "⚽", team: "中国女足", opponent: "泰国女足", competition: "2026女足亚洲杯小组赛", date: "2026-07-06", time: "19:00", venue: "成都凤凰山体育公园", isHome: true },
-  { id: 5, sport: "basketball", sportName: "篮球", icon: "🏀", team: "中国男篮", opponent: "菲律宾", competition: "2026 FIBA亚洲杯小组赛", date: "2026-06-20", time: "20:30", venue: "深圳大运中心体育馆", isHome: true },
-  { id: 6, sport: "basketball", sportName: "篮球", icon: "🏀", team: "中国女篮", opponent: "日本女篮", competition: "2026 FIBA女篮亚洲杯半决赛", date: "2026-06-25", time: "18:00", venue: "北京五棵松体育馆", isHome: true },
-  { id: 7, sport: "basketball", sportName: "篮球", icon: "🏀", team: "中国男篮", opponent: "伊朗", competition: "2026 FIBA亚洲杯小组赛", date: "2026-06-23", time: "17:00", venue: "深圳大运中心体育馆", isHome: true },
-  { id: 8, sport: "volleyball", sportName: "排球", icon: "🏐", team: "中国女排", opponent: "巴西", competition: "2026世界女排联赛 分站赛", date: "2026-06-11", time: "19:30", venue: "宁波北仑体艺中心", isHome: true },
-  { id: 9, sport: "volleyball", sportName: "排球", icon: "🏐", team: "中国女排", opponent: "美国", competition: "2026世界女排联赛 分站赛", date: "2026-06-15", time: "15:00", venue: "宁波北仑体艺中心", isHome: true },
-  { id: 10, sport: "volleyball", sportName: "排球", icon: "🏐", team: "中国女排", opponent: "意大利", competition: "2026世界女排联赛 分站赛", date: "2026-06-18", time: "19:30", venue: "宁波北仑体艺中心", isHome: true },
-  { id: 11, sport: "volleyball", sportName: "排球", icon: "🏐", team: "中国男排", opponent: "日本", competition: "2026世界男排联赛 分站赛", date: "2026-07-10", time: "18:00", venue: "东京体育馆", isHome: false },
-  { id: 12, sport: "tabletennis", sportName: "乒乓球", icon: "🏓", team: "中国乒乓球队", opponent: "日本队", competition: "2026世乒赛团体赛 决赛", date: "2026-07-05", time: "19:00", venue: "上海体育馆", isHome: true },
-  { id: 13, sport: "tabletennis", sportName: "乒乓球", icon: "🏓", team: "中国乒乓球队", opponent: "德国队", competition: "2026世乒赛团体赛 半决赛", date: "2026-07-03", time: "14:00", venue: "上海体育馆", isHome: true },
-  { id: 14, sport: "badminton", sportName: "羽毛球", icon: "🏸", team: "中国羽毛球队", opponent: "印尼队", competition: "2026汤姆斯杯 1/4决赛", date: "2026-06-22", time: "13:00", venue: "广州天河体育馆", isHome: true },
-  { id: 15, sport: "badminton", sportName: "羽毛球", icon: "🏸", team: "中国羽毛球队", opponent: "韩国队", competition: "2026尤伯杯 半决赛", date: "2026-06-26", time: "18:00", venue: "广州天河体育馆", isHome: true },
-  { id: 16, sport: "swimming", sportName: "游泳", icon: "🏊", team: "中国游泳队", opponent: "", competition: "2026世界游泳锦标赛", date: "2026-07-14", time: "09:00", venue: "杭州奥体中心游泳馆", isHome: true },
-  { id: 17, sport: "athletics", sportName: "田径", icon: "🏃", team: "中国田径队", opponent: "", competition: "2026亚洲田径锦标赛", date: "2026-07-20", time: "08:30", venue: "武汉体育中心", isHome: true },
-  { id: 101, sport: "football", sportName: "足球", icon: "⚽", team: "中国男足", opponent: "沙特阿拉伯", competition: "2026世界杯亚洲区预选赛", date: "2026-05-25", time: "19:35", venue: "大连梭鱼湾足球场", isHome: true, score: "2-1", result: "win" },
-  { id: 102, sport: "volleyball", sportName: "排球", icon: "🏐", team: "中国女排", opponent: "土耳其", competition: "2026世界女排联赛", date: "2026-05-28", time: "19:30", venue: "宁波北仑体艺中心", isHome: true, score: "3-0", result: "win" },
-  { id: 103, sport: "basketball", sportName: "篮球", icon: "🏀", team: "中国女篮", opponent: "澳大利亚女篮", competition: "热身赛", date: "2026-05-30", time: "19:00", venue: "北京五棵松体育馆", isHome: true, score: "72-68", result: "win" },
-  { id: 104, sport: "football", sportName: "足球", icon: "⚽", team: "中国女足", opponent: "朝鲜女足", competition: "友谊赛", date: "2026-05-22", time: "15:30", venue: "苏州奥体中心", isHome: true, score: "3-0", result: "win" }
-,
-
-  // ===== U23 / U20 / U17 足球 =====
-  { id: 201, sport: "football", sportName: "足球", icon: "⚽", team: "中国U23", opponent: "韩国U23", competition: "2026 U23亚洲杯 小组赛", date: "2026-06-10", time: "16:00", venue: "多哈体育城", isHome: false },
-  { id: 202, sport: "football", sportName: "足球", icon: "⚽", team: "中国U23", opponent: "越南U23", competition: "2026 U23亚洲杯 小组赛", date: "2026-06-13", time: "18:00", venue: "多哈体育城", isHome: false },
-  { id: 203, sport: "football", sportName: "足球", icon: "⚽", team: "中国U23", opponent: "阿联酋U23", competition: "2026 U23亚洲杯 小组赛", date: "2026-06-16", time: "16:00", venue: "多哈体育城", isHome: false },
-  { id: 204, sport: "football", sportName: "足球", icon: "⚽", team: "中国U20", opponent: "沙特U20", competition: "2026 U20亚洲杯 小组赛", date: "2026-07-08", time: "17:00", venue: "深圳青少年足球训练基地", isHome: true },
-  { id: 205, sport: "football", sportName: "足球", icon: "⚽", team: "中国U20", opponent: "卡塔尔U20", competition: "2026 U20亚洲杯 小组赛", date: "2026-07-11", time: "19:30", venue: "深圳青少年足球训练基地", isHome: true },
-  { id: 206, sport: "football", sportName: "足球", icon: "⚽", team: "中国U20", opponent: "吉尔吉斯U20", competition: "2026 U20亚洲杯 小组赛", date: "2026-07-14", time: "17:00", venue: "深圳青少年足球训练基地", isHome: true },
-  { id: 207, sport: "football", sportName: "足球", icon: "⚽", team: "中国U17", opponent: "日本U17", competition: "2026 U17亚洲杯 小组赛", date: "2026-07-20", time: "20:00", venue: "泰国曼谷", isHome: false },
-  { id: 208, sport: "football", sportName: "足球", icon: "⚽", team: "中国U17", opponent: "澳大利亚U17", competition: "2026 U17亚洲杯 小组赛", date: "2026-07-23", time: "17:00", venue: "泰国曼谷", isHome: false },
-  { id: 209, sport: "football", sportName: "足球", icon: "⚽", team: "中国女足U20", opponent: "朝鲜女足U20", competition: "2026 女足U20亚洲杯 小组赛", date: "2026-07-05", time: "15:00", venue: "昆明海埂基地", isHome: true },
-  { id: 210, sport: "football", sportName: "足球", icon: "⚽", team: "中国女足U17", opponent: "日本女足U17", competition: "2026 女足U17亚洲杯 小组赛", date: "2026-07-15", time: "16:30", venue: "苏州太湖足球基地", isHome: true },
-  // ===== U系列 篮球 =====
-  { id: 301, sport: "basketball", sportName: "篮球", icon: "🏀", team: "中国U19男篮", opponent: "美国U19", competition: "2026 U19男篮世界杯 小组赛", date: "2026-06-28", time: "23:30", venue: "瑞士洛桑", isHome: false },
-  { id: 302, sport: "basketball", sportName: "篮球", icon: "🏀", team: "中国U19男篮", opponent: "法国U19", competition: "2026 U19男篮世界杯 小组赛", date: "2026-06-30", time: "18:00", venue: "瑞士洛桑", isHome: false },
-  { id: 303, sport: "basketball", sportName: "篮球", icon: "🏀", team: "中国U19男篮", opponent: "马里U19", competition: "2026 U19男篮世界杯 小组赛", date: "2026-07-01", time: "20:30", venue: "瑞士洛桑", isHome: false },
-  { id: 304, sport: "basketball", sportName: "篮球", icon: "🏀", team: "中国U17男篮", opponent: "菲律宾U17", competition: "2026 U17男篮亚洲杯 小组赛", date: "2026-07-12", time: "19:00", venue: "深圳大运中心", isHome: true },
-  { id: 305, sport: "basketball", sportName: "篮球", icon: "🏀", team: "中国U18女篮", opponent: "韩国U18", competition: "2026 U18女篮亚洲杯 小组赛", date: "2026-06-24", time: "17:30", venue: "成都凤凰山体育公园", isHome: true },
-  { id: 306, sport: "basketball", sportName: "篮球", icon: "🏀", team: "中国U18女篮", opponent: "日本U18", competition: "2026 U18女篮亚洲杯 半决赛", date: "2026-06-27", time: "19:00", venue: "成都凤凰山体育公园", isHome: true },
-  { id: 307, sport: "basketball", sportName: "篮球", icon: "🏀", team: "中国U16男篮", opponent: "澳大利亚U16", competition: "2026 U16男篮亚锦赛 小组赛", date: "2026-07-18", time: "18:30", venue: "多哈", isHome: false },
-  // ===== U系列 排球 =====
-  { id: 401, sport: "volleyball", sportName: "排球", icon: "🏐", team: "中国U21女排", opponent: "意大利U21", competition: "2026 U21女排世锦赛 小组赛", date: "2026-07-08", time: "20:00", venue: "墨西哥蒙特雷", isHome: false },
-  { id: 402, sport: "volleyball", sportName: "排球", icon: "🏐", team: "中国U21女排", opponent: "巴西U21", competition: "2026 U21女排世锦赛 小组赛", date: "2026-07-10", time: "17:00", venue: "墨西哥蒙特雷", isHome: false },
-  { id: 403, sport: "volleyball", sportName: "排球", icon: "🏐", team: "中国U19男排", opponent: "伊朗U19", competition: "2026 U19男排世锦赛 小组赛", date: "2026-06-25", time: "22:00", venue: "巴林麦纳麦", isHome: false },
-  { id: 404, sport: "volleyball", sportName: "排球", icon: "🏐", team: "中国U19男排", opponent: "波兰U19", competition: "2026 U19男排世锦赛 小组赛", date: "2026-06-27", time: "20:00", venue: "巴林麦纳麦", isHome: false },
-  { id: 405, sport: "volleyball", sportName: "排球", icon: "🏐", team: "中国U20女排", opponent: "泰国U20", competition: "2026 U20女排亚锦赛 小组赛", date: "2026-07-02", time: "16:00", venue: "宁波北仑体艺中心", isHome: true },
-  // ===== U系列 乒乓球 =====
-  { id: 501, sport: "tabletennis", sportName: "乒乓球", icon: "🏓", team: "中国U19乒乓", opponent: "韩国U19", competition: "2026 亚青赛 团体决赛", date: "2026-06-30", time: "14:00", venue: "上海体育馆", isHome: true },
-  { id: 502, sport: "tabletennis", sportName: "乒乓球", icon: "🏓", team: "中国U15乒乓", opponent: "日本U15", competition: "2026 亚青赛 U15组决赛", date: "2026-06-28", time: "10:00", venue: "上海体育馆", isHome: true },
-  { id: 503, sport: "tabletennis", sportName: "乒乓球", icon: "🏓", team: "中国U19乒乓", opponent: "日本U19", competition: "WTT青少年常规赛 决赛", date: "2026-07-18", time: "16:00", venue: "成都乒校", isHome: true },
-  // ===== U系列 羽毛球 =====
-  { id: 601, sport: "badminton", sportName: "羽毛球", icon: "🏸", team: "中国U19羽球", opponent: "马来西亚U19", competition: "2026 亚青赛 团体半决赛", date: "2026-07-09", time: "14:00", venue: "武汉体育中心", isHome: true },
-  { id: 602, sport: "badminton", sportName: "羽毛球", icon: "🏸", team: "中国U19羽球", opponent: "印尼U19", competition: "2026 亚青赛 团体决赛", date: "2026-07-10", time: "14:00", venue: "武汉体育中心", isHome: true },
-  { id: 603, sport: "badminton", sportName: "羽毛球", icon: "🏸", team: "中国U17羽球", opponent: "日本U17", competition: "2026 U17亚青赛 团体赛", date: "2026-06-20", time: "13:00", venue: "广州天河体育馆", isHome: true },
-  // ===== U系列 游泳 / 田径 =====
-  { id: 701, sport: "swimming", sportName: "游泳", icon: "🏊", team: "中国U18游泳队", opponent: "", competition: "2026 世青赛游泳项目", date: "2026-07-22", time: "09:00", venue: "杭州奥体中心游泳馆", isHome: true },
-  { id: 702, sport: "swimming", sportName: "游泳", icon: "🏊", team: "中国U15游泳队", opponent: "", competition: "2026 U15游泳公开赛", date: "2026-06-16", time: "09:30", venue: "武汉体育中心游泳馆", isHome: true },
-  { id: 801, sport: "athletics", sportName: "田径", icon: "🏃", team: "中国U20田径队", opponent: "", competition: "2026 亚青赛田径项目", date: "2026-07-26", time: "08:00", venue: "武汉体育中心", isHome: true },
-  { id: 802, sport: "athletics", sportName: "田径", icon: "🏃", team: "中国U18田径队", opponent: "", competition: "2026 U18田径锦标赛", date: "2026-06-12", time: "08:30", venue: "沈阳奥体中心", isHome: true },
-
-];
+  {
+    "id": 1,
+    "sport": "football",
+    "sportName": "足球",
+    "icon": "⚽",
+    "team": "中国男足",
+    "opponent": "泰国",
+    "competition": "国际友谊赛",
+    "date": "2026-06-09",
+    "time": "11:35",
+    "venue": "待定",
+    "isHome": true
+  },
+  {
+    "id": 3,
+    "sport": "basketball",
+    "sportName": "篮球",
+    "icon": "🏀",
+    "team": "中国男篮",
+    "opponent": "日本男篮",
+    "competition": "FIBA篮球世界杯",
+    "date": "2026-07-03",
+    "time": "10:00",
+    "venue": "待定",
+    "isHome": true
+  },
+  {
+    "id": 4,
+    "sport": "basketball",
+    "sportName": "篮球",
+    "icon": "🏀",
+    "team": "中国女篮",
+    "opponent": "美国女篮",
+    "competition": "FIBA女篮世界杯",
+    "date": "2026-09-04",
+    "time": "16:00",
+    "venue": "待定",
+    "isHome": false
+  },
+  {
+    "id": 5,
+    "sport": "volleyball",
+    "sportName": "排球",
+    "icon": "🏐",
+    "team": "中国男排",
+    "opponent": "斯洛文尼亚男排",
+    "competition": "FIVB世界男排联赛",
+    "date": "2026-06-10",
+    "time": "08:30",
+    "venue": "临沂奥体公园体育馆",
+    "isHome": true
+  },
+  {
+    "id": 6,
+    "sport": "volleyball",
+    "sportName": "排球",
+    "icon": "🏐",
+    "team": "中国女排",
+    "opponent": "波兰女排",
+    "competition": "FIVB世界女排联赛",
+    "date": "2026-06-07",
+    "time": "11:00",
+    "venue": "南京青年奥林匹克体育公园",
+    "isHome": true
+  }
+]
 
 const SPORTS = [
   { key: "all", name: "全部", icon: "" },
