@@ -1,5 +1,7 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # Weekly sports schedule update script
+# Usage: python scripts/update_matches.py
+#   --doubao-input <file> : Load pre-queried match data from DouBao
 import json, os, re, sys, urllib.request, urllib.error
 from datetime import datetime, date, timezone
 
@@ -50,7 +52,6 @@ def verify_all_matches(matches):
         return matches
     try:
         result = json.loads(response)
-        # Merge verified + corrected
         verified = result.get('verified', [])
         corrected = result.get('corrected', [])
         return verified + corrected
@@ -60,7 +61,7 @@ def verify_all_matches(matches):
 def load_current_matches():
     with open(APP_JS_PATH, 'r', encoding='utf-8') as f:
         content = f.read()
-    match = re.search(r'const MATCHES = (\[.*?\]);', content, re.DOTALL)
+    match = re.search(r'const MATCHES = (\[[\s\S]*?\]);', content)
     if not match:
         return []
     try:
@@ -69,15 +70,20 @@ def load_current_matches():
         return []
 
 def update_app_js(new_matches):
+    # SAFETY: Never write empty data
+    if not new_matches or len(new_matches) == 0:
+        print('SAFETY: Refusing to write 0 matches to app.js')
+        return False
     for i, m in enumerate(new_matches):
         m['id'] = i + 1
     with open(APP_JS_PATH, 'r', encoding='utf-8') as f:
         content = f.read()
     new_json = json.dumps(new_matches, ensure_ascii=False, indent=2)
-    content = re.sub(r'const MATCHES = \[.*?\];', f'const MATCHES = {new_json};', content, flags=re.DOTALL)
+    content = re.sub(r'const MATCHES = \[[\s\S]*?\];', f'const MATCHES = {new_json};', content, flags=re.DOTALL)
     with open(APP_JS_PATH, 'w', encoding='utf-8') as f:
         f.write(content)
     print(f'Updated app.js: {len(new_matches)} matches')
+    return True
 
 def push_to_github():
     os.chdir(PROJECT_DIR)
@@ -88,7 +94,10 @@ def push_to_github():
 
 def main():
     print(f'=== Weekly Schedule Update - {date.today().isoformat()} ===')
+    current = load_current_matches()
+    print(f'Current matches in app.js: {len(current)}')
 
+    raw = []
     if len(sys.argv) > 2 and sys.argv[1] == '--doubao-input':
         with open(sys.argv[2], 'r', encoding='utf-8') as f:
             raw = json.load(f)
@@ -116,13 +125,24 @@ def main():
             print('Failed to parse response')
             return
 
-    print(f'Raw data: {len(raw)} matches')
+    print(f'Raw data from API: {len(raw)} matches')
+
+    # CRITICAL SAFETY: Never overwrite with 0 matches
+    if not raw or len(raw) == 0:
+        print('!!! SAFETY: API returned 0 matches. Keeping existing data unchanged.')
+        return
+
     print('Phase 2: Verifying with DeepSeek...')
     verified = verify_all_matches(raw)
+
+    if not verified or len(verified) == 0:
+        print('!!! SAFETY: Verification returned 0 matches. Keeping existing data unchanged.')
+        return
+
     print('Phase 3: Updating website...')
-    update_app_js(verified)
-    print('Phase 4: Pushing to GitHub...')
-    push_to_github()
+    if update_app_js(verified):
+        print('Phase 4: Pushing to GitHub...')
+        push_to_github()
     print('=== Update Complete ===')
 
 if __name__ == '__main__':
