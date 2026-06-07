@@ -1,0 +1,31 @@
+﻿name: Weekly Match Update
+
+on:
+  schedule:
+    # Run every Monday at 08:00 Beijing time (00:00 UTC)
+    - cron: '0 0 * * 1'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Run update script
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: python scripts/update_matches.py
+      
+      - name: Commit and push
+        run: |
+          git config user.name "Weekly Bot"
+          git config user.email "bot@china-sports-reminder"
+          git add -A
+          git diff --quiet && git diff --staged --quiet || git commit -m "weekly update: $(date +%Y-%m-%d)"
+          git push
